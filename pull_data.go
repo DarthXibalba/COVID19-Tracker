@@ -77,14 +77,16 @@ type DataDirector struct {
 
 
 func main() {
-    var outdir = "test/"
+    var outdir = "data/"
 
     now := time.Now()
 
-    data_sites := make([]DataDirector, 2)
+    data_sites := make([]DataDirector, 3)
     data_sites[0] = DataDirector{"https://www.worldometers.info/coronavirus/",
                                  outdir + "worldometers_" + get_timestamp(now) + ".html"}
-    data_sites[1] = DataDirector{"https://ncov2019.live/data",
+    data_sites[1] = DataDirector{"https://www.worldometers.info/coronavirus/country/us/",
+                                 outdir + "worldometers_us_" + get_timestamp(now) + ".html"}
+    data_sites[2] = DataDirector{"https://ncov2019.live/data",
                                  outdir + "ncov2019_" + get_timestamp(now) + ".html"}
 
 
