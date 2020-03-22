@@ -7,6 +7,7 @@ import (
     "os"
     "strings"
     "time"
+    //"github.com/robfig/cron/v3"
 )
 
 
@@ -67,30 +68,69 @@ func pull_data(input_url, output_file string) {
             log.Fatal(err)
         }
     }
-
 }
 
 
 type DataDirector struct {
-    data_url, out_html string
+    data_url string
+    out_dir string
+    html_fname string
 }
 
 
 func main() {
     var outdir = "data/"
 
+    countries := []string{
+        "china",
+        "italy",
+        "spain",
+        "us",
+        "germany",
+        "iran",
+        "france",
+        "south-korea",
+        "switzerland",
+        "uk",
+        "netherlands",
+        "austria",
+        "belgium",
+        "norway",
+        "sweden",
+        "canada",
+        "denmark",
+        "portugal",
+        "malaysia",
+        "brazil",
+        "australia",
+    }
+
     now := time.Now()
+    timestamp := get_timestamp(now)
 
-    data_sites := make([]DataDirector, 3)
-    data_sites[0] = DataDirector{"https://www.worldometers.info/coronavirus/",
-                                 outdir + "worldometers_" + get_timestamp(now) + ".html"}
-    data_sites[1] = DataDirector{"https://www.worldometers.info/coronavirus/country/us/",
-                                 outdir + "worldometers_us_" + get_timestamp(now) + ".html"}
-    data_sites[2] = DataDirector{"https://ncov2019.live/data",
-                                 outdir + "ncov2019_" + get_timestamp(now) + ".html"}
+    data_sites := make([]DataDirector, len(countries))
+    for idx, country := range countries {
+        data_sites[idx] = DataDirector {
+            "https://www.worldometers.info/coronavirus/country/" + country +"/",
+            outdir + "worldometers/" + country + "/",
+            "worldometers_" + country + "_" + timestamp + ".html",
+        }
+    }
 
+    data_sites = append(data_sites, DataDirector {
+        "https://www.worldometers.info/coronavirus/",
+        outdir + "worldometers/global/",
+        "worldometers_" + timestamp + ".html",
+    })
+
+    data_sites = append(data_sites, DataDirector {
+        "https://ncov2019.live/data",
+        outdir + "ncov2019/",
+        "ncov2019_" + timestamp + ".html",
+    })
 
     for _, site := range data_sites {
-        pull_data(site.data_url, site.out_html)
+        os.MkdirAll(site.out_dir, os.ModePerm)
+        pull_data(site.data_url, site.out_dir + site.html_fname)
     }
 }
