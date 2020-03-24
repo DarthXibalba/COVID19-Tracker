@@ -147,7 +147,7 @@ func main() {
 
     // Setup task scheduler
     c := cron.New()
-    c.AddFunc("00 0,8,16 * * *", func() {sync_all(countries, out_dir)})
+    c.AddFunc("01 0,8,16 * * *", func() {sync_all(countries, out_dir)})
     c.AddFunc("15 0,8,16 * * *", func() {sync_all(countries, backup_dir)})
     c.Start()
 

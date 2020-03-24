@@ -2,3 +2,9 @@
 # Ignore test files
 #
 test/
+
+#
+# Ignore generated files
+#
+go.*
+pull_data
